@@ -59,7 +59,7 @@ class Awaiting extends Component {
 
             if (pr.files && pr.files.length) {
               const parts = pr.files[0].filename.split('/')
-              url += `${parts[1]}/${parts[2]}/${parts[3]}`
+              url += `${parts[1]}/${parts[2]}/${parts[3]}/#comments-${parts[3]}`
             }
 
             return (

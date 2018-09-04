@@ -51,8 +51,7 @@ class Comments extends Component {
 
             if (comment.files && comment.files.length) {
               const parts = comment.files[0].data.path.split('/')
-
-              url += `${parts[1]}/${parts[2]}/${parts[3]}`
+              url += `${parts[1]}/${parts[2]}/${parts[3]}/#comments-${parts[3]}`
             }
 
             return (
