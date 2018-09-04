@@ -67,10 +67,16 @@ gh.authenticate = action(function authenticate() {
 
 gh.loadAwaiting = action(function loadAwaiting() {
   apiRequest(`/repos/${repo}/pulls`)
-    .then(action("process-gh-requests", ({data}) => {
-      gh.awaiting_moderation = data;
+    .then(({ data }) => {
+      return Promise.all(data.map(pr => fetchPRFiles(pr.number, pr)))
+    })
+    .then(prs => {
+      return prs
+    })
+    .then(action("process-gh-requests", prs => {
+      gh.awaiting_moderation = prs;
       gh.loading = false;
-    }));
+    }))
 });
 
 gh.loadComments = action(function loadComments(pageLink) {
@@ -205,6 +211,19 @@ function fetchCommit(sha) {
     return apiRequest(`/repos/${repo}/commits/${sha}`).then(({data}) => {
       LocalForage.setItem(`gh.${ sha }`, data);
       return data;
+    });
+  });
+}
+
+function fetchPRFiles(number, pr) {
+  const cache = number ? LocalForage.getItem(`pr.${ number }`) : Promise.resolve(null);
+  return cache.then((cached) => {
+    if (cached) { return cached; }
+
+    return apiRequest(`/repos/${repo}/pulls/${number}/files`).then(({data}) => {
+      const res = Object.assign({}, pr, { files: data })
+      LocalForage.setItem(`pr.${ number }`, res);
+      return res;
     });
   });
 }

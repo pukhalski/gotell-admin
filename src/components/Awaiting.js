@@ -50,18 +50,29 @@ class Awaiting extends Component {
             </Table.HeaderCell>
             <Table.HeaderCell>Comment</Table.HeaderCell>
             <Table.HeaderCell>Date</Table.HeaderCell>
+            <Table.HeaderCell>Article</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {github.awaiting_moderation && github.awaiting_moderation.map((pr) => (
-            <Table.Row key={pr.id}>
-              <Table.Cell textAlign="center">
-                <Checkbox onChange={this.handleToggle} id={pr.id} checked={pr.checked}/>
-              </Table.Cell>
-              <Table.Cell>{pr.title}</Table.Cell>
-              <Table.Cell singleLine textAlign="right">{distanceInWords(pr.created_at)} ago</Table.Cell>
-            </Table.Row>
-          ))}
+          {github.awaiting_moderation && github.awaiting_moderation.map((pr) => {
+            let url = "https://smashingmagazine.com/"
+
+            if (pr.files && pr.files.length) {
+              const parts = pr.files[0].filename.split('/')
+              url += `${parts[1]}/${parts[2]}/${parts[3]}`
+            }
+
+            return (
+              <Table.Row key={pr.id}>
+                <Table.Cell textAlign="center">
+                  <Checkbox onChange={this.handleToggle} id={pr.id} checked={pr.checked}/>
+                </Table.Cell>
+                <Table.Cell>{pr.title}</Table.Cell>
+                <Table.Cell singleLine textAlign="right">{distanceInWords(pr.created_at)} ago</Table.Cell>
+                <Table.Cell><a href={url} target="_blank">Open Article </a></Table.Cell>
+              </Table.Row>
+            )
+          })}
         </Table.Body>
       </Table>
     </Dimmer.Dimmable>;

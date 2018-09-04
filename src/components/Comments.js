@@ -42,18 +42,30 @@ class Comments extends Component {
             </Table.HeaderCell>
             <Table.HeaderCell>Comment</Table.HeaderCell>
             <Table.HeaderCell>Date</Table.HeaderCell>
+            <Table.HeaderCell>Article</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {github.comments && github.comments.map((comment) => (
-            <Table.Row key={comment.sha}>
-              <Table.Cell textAlign="center">
-                <Checkbox onChange={this.handleToggle} id={comment.sha} checked={comment.checked}/>
-              </Table.Cell>
-              <Table.Cell>{comment.commit.message}</Table.Cell>
-              <Table.Cell singleLine textAlign="right">{distanceInWords(comment.commit.author.date)} ago</Table.Cell>
-            </Table.Row>
-          ))}
+          {github.comments && github.comments.map((comment) => {
+            let url = "https://smashingmagazine.com/"
+
+            if (comment.files && comment.files.length) {
+              const parts = comment.files[0].data.path.split('/')
+
+              url += `${parts[1]}/${parts[2]}/${parts[3]}`
+            }
+
+            return (
+              <Table.Row key={comment.sha}>
+                <Table.Cell textAlign="center">
+                  <Checkbox onChange={this.handleToggle} id={comment.sha} checked={comment.checked}/>
+                </Table.Cell>
+                <Table.Cell>{comment.commit.message}</Table.Cell>
+                <Table.Cell singleLine textAlign="right">{distanceInWords(comment.commit.author.date)} ago</Table.Cell>
+                <Table.Cell><a href={url} target="_blank">Open Article </a></Table.Cell>
+              </Table.Row>
+            )
+          })}
         </Table.Body>
       </Table>
       {github.commentsPages.next && <Button onClick={this.handleLoadMore}>Load More</Button>}
