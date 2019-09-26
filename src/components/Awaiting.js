@@ -67,7 +67,7 @@ class Awaiting extends Component {
                 <Table.Cell textAlign="center">
                   <Checkbox onChange={this.handleToggle} id={pr.id} checked={pr.checked}/>
                 </Table.Cell>
-                <Table.Cell>{pr.title}</Table.Cell>
+                <Table.Cell>{pr.body}</Table.Cell>
                 <Table.Cell singleLine textAlign="right">{distanceInWords(pr.created_at)} ago</Table.Cell>
                 <Table.Cell><a href={url} target="_blank">Open Article </a></Table.Cell>
               </Table.Row>
