@@ -49,6 +49,7 @@ class Awaiting extends Component {
               <Button onClick={this.handleTrash}><Icon name='thumbs outline down'/></Button>
             </Table.HeaderCell>
             <Table.HeaderCell>Comment</Table.HeaderCell>
+            <Table.HeaderCell>Author</Table.HeaderCell>
             <Table.HeaderCell>Date</Table.HeaderCell>
             <Table.HeaderCell>Article</Table.HeaderCell>
           </Table.Row>
@@ -56,7 +57,10 @@ class Awaiting extends Component {
         <Table.Body>
           {github.awaiting_moderation && github.awaiting_moderation.map((pr) => {
             let url = "https://smashingmagazine.com/"
-
+            const matches = pr.body.match(/(\[([\s\S]+)\]: )/g)
+            console.log(matches)
+            const author = matches[0] || ''
+            const body = pr.body.replace(author, '')
             if (pr.files && pr.files.length) {
               const parts = pr.files[0].filename.split('/')
               url += `${parts[1]}/${parts[2]}/${parts[3]}/#comments-${parts[3]}`
@@ -67,7 +71,8 @@ class Awaiting extends Component {
                 <Table.Cell textAlign="center">
                   <Checkbox onChange={this.handleToggle} id={pr.id} checked={pr.checked}/>
                 </Table.Cell>
-                <Table.Cell>{pr.body}</Table.Cell>
+                <Table.Cell>{body}</Table.Cell>
+                <Table.Cell>{author.replace(/\[([\s\S]+)\]: /g, '$1')}</Table.Cell>
                 <Table.Cell singleLine textAlign="right">{distanceInWords(pr.created_at)} ago</Table.Cell>
                 <Table.Cell><a href={url} target="_blank">Open Article </a></Table.Cell>
               </Table.Row>
