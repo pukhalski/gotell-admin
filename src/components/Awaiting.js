@@ -58,7 +58,6 @@ class Awaiting extends Component {
           {github.awaiting_moderation && github.awaiting_moderation.map((pr) => {
             let url = "https://smashingmagazine.com/"
             const matches = pr.body.match(/(\[([\s\S]+)\]: )/g)
-            console.log(matches)
             const author = matches[0] || ''
             const body = pr.body.replace(author, '')
             if (pr.files && pr.files.length) {
